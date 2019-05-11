@@ -67,13 +67,22 @@ class HomePage extends StatelessWidget {
   }
 
   Widget submitButton() {
-    return OutlineButton(
-        onPressed: () {},
-        borderSide: BorderSide(color: Colors.black),
-        child: Text(
-          'LOGIN',
-          style: buttonTextStyle,
-          textAlign: TextAlign.center,
-        ));
+    return StreamBuilder<bool>(
+      stream: bloc.isSubmitValid,
+      builder: (context, snapshot) {
+        return OutlineButton(
+          disabledTextColor: Colors.grey,
+          textColor: Colors.blue,
+          borderSide: BorderSide(color: Colors.blue),
+          disabledBorderColor: Colors.grey,
+          child: Text(
+            'LOGIN',
+            style: buttonTextStyle,
+            textAlign: TextAlign.center,
+          ),
+          onPressed: snapshot.hasData ? bloc.submit : null,
+        );
+      },
+    );
   }
 }
