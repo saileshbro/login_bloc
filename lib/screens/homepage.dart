@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:login_bloc/blocs/loginbloc.dart';
 import 'package:login_bloc/styles/textfield.dart';
 import 'package:login_bloc/styles/typography.dart';
 
@@ -42,17 +43,27 @@ class HomePage extends StatelessWidget {
   }
 
   Widget emailField() {
-    return TextField(
-      decoration: inputField('you@example.com', 'Email'),
-      keyboardType: TextInputType.emailAddress,
-    );
+    return StreamBuilder<String>(
+        stream: bloc.email,
+        builder: (context, snapshot) {
+          return TextField(
+            decoration: inputField('you@example.com', 'Email', snapshot.error),
+            keyboardType: TextInputType.emailAddress,
+            onChanged: bloc.changeEmail,
+          );
+        });
   }
 
   Widget passwordField() {
-    return TextField(
-      decoration: inputField('Your Password', 'Password'),
-      obscureText: true,
-    );
+    return StreamBuilder<Object>(
+        stream: bloc.password,
+        builder: (context, snapshot) {
+          return TextField(
+            decoration: inputField('Your Password', 'Password', snapshot.error),
+            obscureText: true,
+            onChanged: bloc.changePassword,
+          );
+        });
   }
 
   Widget submitButton() {
