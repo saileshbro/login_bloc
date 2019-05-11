@@ -1,11 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:login_bloc/validators/validator.dart';
+import 'package:rxdart/rxdart.dart';
 
-class LoginBloc with Validators {
-  final StreamController<String> _emailController = StreamController<String>();
-  final StreamController<String> _passwordController =
-      StreamController<String>();
-
+class LoginBloc extends Object with Validators {
+  BehaviorSubject<String> _emailController = BehaviorSubject<String>();
+  BehaviorSubject<String> _passwordController = BehaviorSubject<String>();
+  Stream<bool> get isSubmitValid =>
+      Observable.combineLatest2(email, password, (e, p) => true);
 // getters to get email and password streams
   Stream<String> get email => _emailController.stream.transform(emailValidator);
   Stream<String> get password =>
@@ -18,6 +20,15 @@ class LoginBloc with Validators {
   dispose() {
     _emailController.close();
     _passwordController.close();
+  }
+
+  submit() {
+    final data = <String, String>{
+      "email": _emailController.value,
+      "password": _passwordController.value
+    };
+    // here send this to the api for authentication
+    print(jsonEncode(data));
   }
 }
 
